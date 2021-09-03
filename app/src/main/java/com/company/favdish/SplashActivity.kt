@@ -35,7 +35,7 @@ class SplashActivity : AppCompatActivity() {
 
         splashAnimation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
-                TODO("Not yet implemented")
+                //TODO("Not yet implemented")
             }
 
             override fun onAnimationEnd(animation: Animation?) {
@@ -47,7 +47,7 @@ class SplashActivity : AppCompatActivity() {
             }
 
             override fun onAnimationRepeat(animation: Animation?) {
-                TODO("Not yet implemented")
+                //TODO("Not yet implemented")
             }
 
         })
