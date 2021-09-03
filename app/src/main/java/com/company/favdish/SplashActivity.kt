@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.company.favdish.databinding.ActivitySplashBinding
 
@@ -24,5 +25,8 @@ class SplashActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
         }
+
+        val splashAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_splash)
+        splashBinding.tvAppName.animation = splashAnimation
     }
 }
