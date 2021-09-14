@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -215,13 +216,15 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
 
             if (requestCode == GALLERY) {
                 //setting the image from gallery as dish image
-                data?.extras?.let {
+                data?.let {
                     val selectedPhotoUri = data.data
                     mBinding.ivDishImage.setImageURI(selectedPhotoUri)
                     // changing the vector image
                     mBinding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_edit))
                 }
             }
+        } else if (requestCode == Activity.RESULT_CANCELED) {
+            Log.i("cancelled", "user cancelled")
         }
     }
 }
