@@ -231,6 +231,10 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                         .load(thumbnail)
                         .centerCrop()
                         .into(mBinding.ivDishImage)
+                    //saving from camera
+                    mImagePath = saveImageToInternalStorage(thumbnail)
+                    Log.i("imagePath", mImagePath)
+
                     // changing the vector image
                     mBinding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_edit))
                 }
