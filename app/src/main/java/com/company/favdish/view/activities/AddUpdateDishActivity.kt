@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -14,6 +15,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.company.favdish.R
 import com.company.favdish.databinding.ActivityAddUpdateDishBinding
 import com.company.favdish.databinding.DialogCustomImageSelectionBinding
@@ -205,6 +207,8 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                 data?.extras?.let {
                     val thumbnail: Bitmap = data.extras!!.get("data") as Bitmap
                     mBinding.ivDishImage.setImageBitmap(thumbnail)
+                    // changing the vector image
+                    mBinding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_edit))
                 }
             }
         }
