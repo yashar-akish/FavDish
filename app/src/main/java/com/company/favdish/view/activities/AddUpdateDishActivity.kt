@@ -1,13 +1,25 @@
 package com.company.favdish.view.activities
 
+import android.Manifest
 import android.app.Dialog
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.media.audiofx.Equalizer
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.company.favdish.R
 import com.company.favdish.databinding.ActivityAddUpdateDishBinding
 import com.company.favdish.databinding.DialogCustomImageSelectionBinding
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 
 class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -59,15 +71,92 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         dialog.setContentView(binding.root)
 
         binding.tvCamera.setOnClickListener {
-            Toast.makeText(this, "Camera clicked", Toast.LENGTH_SHORT).show()
+
+            /**
+             * implementing Dexter
+             * https://github.com/Karumi/Dexter
+             * asking multiple permissions
+             */
+            Dexter.withContext(this).withPermissions(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA
+            ).withListener(object : MultiplePermissionsListener{
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+
+                    if (report!!.areAllPermissionsGranted()) {
+                        Toast.makeText(this@AddUpdateDishActivity, "you have camera permission now.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        showRationalDialogForPermissions()
+                    }
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: MutableList<PermissionRequest>?,
+                    token: PermissionToken?
+                ) {
+                    showRationalDialogForPermissions()
+                }
+
+            }).onSameThread().check()
+
             dialog.dismiss()
         }
 
         binding.tvGallery.setOnClickListener {
-            Toast.makeText(this, "Gallery clicked", Toast.LENGTH_SHORT).show()
+
+            Dexter.withContext(this).withPermissions(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ).withListener(object : MultiplePermissionsListener{
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+
+                    if (report!!.areAllPermissionsGranted()) {
+                        Toast.makeText(this@AddUpdateDishActivity, "you have gallery permission now to select an image.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        showRationalDialogForPermissions()
+                    }
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: MutableList<PermissionRequest>?,
+                    token: PermissionToken?
+                ) {
+                    showRationalDialogForPermissions()
+                }
+
+            }).onSameThread().check()
+
             dialog.dismiss()
         }
 
         dialog.show()
+    }
+
+
+    /**
+     * in case of refusing the permissions
+     */
+    private fun showRationalDialogForPermissions() {
+
+        AlertDialog.Builder(this).setMessage("You have turned off the permissions.\nto " +
+                "enable it go to the application settings ")
+            .setPositiveButton("GO TO THE SETTINGS")
+            {
+                _,_ -> try {
+                /**
+                 * going to the setting of application
+                 */
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri = Uri.fromParts("package", packageName, null) //application link
+                    intent.data = uri
+                    startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    e.printStackTrace()
+                }
+            }
+            .setNegativeButton("CANCEL") { dialog, _ ->
+                dialog.dismiss()
+            }.show()
     }
 }
