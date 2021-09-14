@@ -32,6 +32,7 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
 
     companion object {
         private const val CAMERA = 1
+        private const val GALLERY = 2
     }
 
     private lateinit var mBinding: ActivityAddUpdateDishBinding
@@ -136,11 +137,11 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                 ).withListener(object :
                     PermissionListener {     // compare with the last version in github
                     override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-                        Toast.makeText(
-                            this@AddUpdateDishActivity,
-                            "You have the gallery permission to select the photo",
-                            Toast.LENGTH_SHORT
-                        ).show()
+
+                        val galleryIntent = Intent(Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+
+                        startActivityForResult(galleryIntent, GALLERY)
                     }
 
                     override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
@@ -207,6 +208,16 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                 data?.extras?.let {
                     val thumbnail: Bitmap = data.extras!!.get("data") as Bitmap
                     mBinding.ivDishImage.setImageBitmap(thumbnail)
+                    // changing the vector image
+                    mBinding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_edit))
+                }
+            }
+
+            if (requestCode == GALLERY) {
+                //setting the image from gallery as dish image
+                data?.extras?.let {
+                    val selectedPhotoUri = data.data
+                    mBinding.ivDishImage.setImageURI(selectedPhotoUri)
                     // changing the vector image
                     mBinding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_edit))
                 }
