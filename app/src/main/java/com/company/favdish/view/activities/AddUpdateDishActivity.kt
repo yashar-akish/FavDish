@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.company.favdish.R
 import com.company.favdish.databinding.ActivityAddUpdateDishBinding
 import com.company.favdish.databinding.DialogCustomImageSelectionBinding
@@ -208,7 +209,13 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                 //setting the image of camera as dish image
                 data?.extras?.let {
                     val thumbnail: Bitmap = data.extras!!.get("data") as Bitmap
-                    mBinding.ivDishImage.setImageBitmap(thumbnail)
+                    //mBinding.ivDishImage.setImageBitmap(thumbnail)  <- because of using Glide remove it
+
+                    //using Glide
+                    Glide.with(this)
+                        .load(thumbnail)
+                        .centerCrop()
+                        .into(mBinding.ivDishImage)
                     // changing the vector image
                     mBinding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_edit))
                 }
@@ -218,7 +225,13 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                 //setting the image from gallery as dish image
                 data?.let {
                     val selectedPhotoUri = data.data
-                    mBinding.ivDishImage.setImageURI(selectedPhotoUri)
+                    //mBinding.ivDishImage.setImageURI(selectedPhotoUri)       <- because of using Glide remove it
+
+                    //using Glide
+                    Glide.with(this)
+                        .load(selectedPhotoUri)
+                        .centerCrop()
+                        .into(mBinding.ivDishImage)
                     // changing the vector image
                     mBinding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_edit))
                 }
