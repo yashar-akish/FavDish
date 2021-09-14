@@ -8,6 +8,7 @@ import android.media.audiofx.Equalizer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.Settings
 import android.view.View
 import android.widget.Toast
@@ -18,8 +19,11 @@ import com.company.favdish.databinding.DialogCustomImageSelectionBinding
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.karumi.dexter.listener.single.PermissionListener
 
 class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -79,16 +83,23 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
              */
             Dexter.withContext(this).withPermissions(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                //Manifest.permission.WRITE_EXTERNAL_STORAGE,   -> new apis does not need this line
                 Manifest.permission.CAMERA
             ).withListener(object : MultiplePermissionsListener{
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
 
-                    if (report!!.areAllPermissionsGranted()) {
+                    /*surround with (?.let) to make sure the code will be executed
+                    only when the report is not empty*/
+                    report?.let {
+                        if (report.areAllPermissionsGranted()) {
+
+                        }
+                    }
+                    /*if (report!!.areAllPermissionsGranted()) {
                         Toast.makeText(this@AddUpdateDishActivity, "you have camera permission now.", Toast.LENGTH_SHORT).show()
                     } else {
                         showRationalDialogForPermissions()
-                    }
+                    }*/
                 }
 
                 override fun onPermissionRationaleShouldBeShown(
@@ -105,22 +116,26 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.tvGallery.setOnClickListener {
 
-            Dexter.withContext(this).withPermissions(
+            Dexter.withContext(this)
+                .withPermission(    // withPermissions to withPermission   (s)
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ).withListener(object : MultiplePermissionsListener{
-                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                //Manifest.permission.WRITE_EXTERNAL_STORAGE        ->  new apis does not need this line
+            ).withListener(object : PermissionListener{     // compare with the last version in github
+                override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+                    Toast.makeText(this@AddUpdateDishActivity,
+                        "You have the gallery permission to select the photo",
+                        Toast.LENGTH_SHORT).show()
+                }
 
-                    if (report!!.areAllPermissionsGranted()) {
-                        Toast.makeText(this@AddUpdateDishActivity, "you have gallery permission now to select an image.", Toast.LENGTH_SHORT).show()
-                    } else {
-                        showRationalDialogForPermissions()
-                    }
+                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
+                    Toast.makeText(this@AddUpdateDishActivity,
+                        "You have Denied the storage permission to select the photo",
+                        Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onPermissionRationaleShouldBeShown(
-                    permissions: MutableList<PermissionRequest>?,
-                    token: PermissionToken?
+                    p0: PermissionRequest?,
+                    p1: PermissionToken?
                 ) {
                     showRationalDialogForPermissions()
                 }
