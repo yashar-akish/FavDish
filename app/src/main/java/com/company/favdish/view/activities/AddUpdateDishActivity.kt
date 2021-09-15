@@ -33,6 +33,7 @@ import com.company.favdish.R
 import com.company.favdish.databinding.ActivityAddUpdateDishBinding
 import com.company.favdish.databinding.DialogCustomImageSelectionBinding
 import com.company.favdish.databinding.DialogCustomListBinding
+import com.company.favdish.utils.Constants
 import com.company.favdish.view.adapters.CustomListItemAdapter
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -68,6 +69,11 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         setupActionBar()
 
         mBinding.ivAddDishImage.setOnClickListener(this)
+
+        mBinding.etType.setOnClickListener(this)
+        mBinding.etCategory.setOnClickListener(this)
+        mBinding.etCookingTime.setOnClickListener(this)
+
     }
 
     /**
@@ -91,6 +97,24 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                 R.id.iv_add_dish_image -> {
                     // display the dialog
                     customImageSelectionDialog()
+                    return
+                }
+                R.id.et_type -> {
+                    customItemListDialog(
+                        resources.getString(R.string.title_select_dish_type),
+                        Constants.dishTypes(), Constants.DISH_TYPE)
+                    return
+                }
+                R.id.et_category -> {
+                    customItemListDialog(
+                        resources.getString(R.string.title_select_dish_category),
+                        Constants.dishCategories(), Constants.DISH_CATEGORY)
+                    return
+                }
+                R.id.et_cooking_time -> {
+                    customItemListDialog(
+                        resources.getString(R.string.title_select_dish_cooking_time),
+                        Constants.dishCookTime(), Constants.DISH_COOKING_TIME)
                     return
                 }
             }
@@ -315,7 +339,10 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         return file.absolutePath
     }
 
-    private fun customItemDialog(title: String, itemList: List<String>, selection: String){
+    /**
+     * running the recyclerView on dialog
+     */
+    private fun customItemListDialog(title: String, itemList: List<String>, selection: String){
 
         val customListDialog = Dialog(this)
         val binding: DialogCustomListBinding = DialogCustomListBinding.inflate(layoutInflater)
