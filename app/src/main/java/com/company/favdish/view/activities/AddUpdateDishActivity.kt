@@ -13,6 +13,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +44,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
+import org.w3c.dom.Text
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -61,6 +63,8 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mBinding: ActivityAddUpdateDishBinding
     private var mImagePath : String = ""
 
+    private lateinit var mCustomListDialog: Dialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityAddUpdateDishBinding.inflate(layoutInflater)
@@ -73,6 +77,8 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         mBinding.etType.setOnClickListener(this)
         mBinding.etCategory.setOnClickListener(this)
         mBinding.etCookingTime.setOnClickListener(this)
+
+        mBinding.btnAddDish.setOnClickListener(this)
 
     }
 
@@ -116,6 +122,8 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                         resources.getString(R.string.title_select_dish_cooking_time),
                         Constants.dishCookTime(), Constants.DISH_COOKING_TIME)
                     return
+                }
+                R.id.btn_add_dish -> {
                 }
             }
         }
@@ -344,10 +352,10 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun customItemListDialog(title: String, itemList: List<String>, selection: String){
 
-        val customListDialog = Dialog(this)
+        mCustomListDialog = Dialog(this)
         val binding: DialogCustomListBinding = DialogCustomListBinding.inflate(layoutInflater)
 
-        customListDialog.setContentView(binding.root)
+        mCustomListDialog.setContentView(binding.root)
         binding.tvTitle.text = title
 
         binding.rvList.layoutManager = LinearLayoutManager(this)
@@ -355,7 +363,28 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         val adapter = CustomListItemAdapter(this, itemList, selection)
         binding.rvList.adapter = adapter
 
-        customListDialog.show()
+        mCustomListDialog.show()
 
+    }
+
+    /**
+     * fill out the form base on selected dialog item
+     */
+    fun selectedListItem(item: String, selection: String) {
+
+        when(selection) {
+            Constants.DISH_TYPE -> {
+                mCustomListDialog.dismiss()
+                mBinding.etType.setText(item)
+            }
+            Constants.DISH_CATEGORY -> {
+                mCustomListDialog.dismiss()
+                mBinding.etCategory.setText(item)
+            }
+            else -> {
+                mCustomListDialog.dismiss()
+                mBinding.etCookingTime.setText(item)
+            }
+        }
     }
 }
