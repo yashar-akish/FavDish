@@ -124,6 +124,74 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                     return
                 }
                 R.id.btn_add_dish -> {
+                    val title = mBinding.etTitle.text.toString().trim { it <= ' ' }
+                    val type = mBinding.etType.text.toString().trim { it <= ' ' }
+                    val category = mBinding.etCategory.text.toString().trim { it <= ' ' }
+                    val ingredients = mBinding.etIngredients.text.toString().trim { it <= ' ' }
+                    val cookingTimeInMinutes = mBinding.etCookingTime.text.toString().trim { it <= ' ' }
+                    val cookingDirection = mBinding.etDirectionToCook.text.toString().trim { it <= ' ' }
+
+                    when {
+                        TextUtils.isEmpty(mImagePath) -> {
+                            Toast.makeText(
+                                this@AddUpdateDishActivity,
+                                resources.getString(R.string.err_msg_select_dish_image),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        TextUtils.isEmpty(title) -> {
+                            Toast.makeText(
+                                this@AddUpdateDishActivity,
+                                resources.getString(R.string.err_msg_enter_dish_title),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        TextUtils.isEmpty(type) -> {
+                            Toast.makeText(
+                                this@AddUpdateDishActivity,
+                                resources.getString(R.string.err_msg_select_dish_type),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        TextUtils.isEmpty(category) -> {
+                            Toast.makeText(
+                                this@AddUpdateDishActivity,
+                                resources.getString(R.string.err_msg_select_dish_category),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        TextUtils.isEmpty(ingredients) -> {
+                            Toast.makeText(
+                                this@AddUpdateDishActivity,
+                                resources.getString(R.string.err_msg_enter_dish_ingredients),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        TextUtils.isEmpty(cookingTimeInMinutes) -> {
+                            Toast.makeText(
+                                this@AddUpdateDishActivity,
+                                resources.getString(R.string.err_msg_select_dish_cooking_time),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        TextUtils.isEmpty(cookingDirection) -> {
+                            Toast.makeText(
+                                this@AddUpdateDishActivity,
+                                resources.getString(R.string.err_msg_enter_dish_cooking_instructions),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        else -> {
+                            Toast.makeText(
+                                this@AddUpdateDishActivity,
+                                "All the entries are valid.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
             }
         }
