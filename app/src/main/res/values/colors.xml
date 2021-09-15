@@ -18,4 +18,6 @@
     <color name="secondaryColor">#e65100</color>
     <color name="secondaryLightColor">#ff833a</color>
     <color name="secondaryDarkColor">#ac1900</color>
+
+    <color name="divider_line_color">#e0e0e0</color>
 </resources>
