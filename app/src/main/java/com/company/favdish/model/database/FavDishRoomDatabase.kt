@@ -9,6 +9,8 @@ import com.company.favdish.model.entities.FavDish
 @Database(entities = [FavDish::class], version = 1)
 abstract class FavDishRoomDatabase: RoomDatabase() {
 
+    abstract fun favDishDao(): FavDishDao
+
     companion object {
         // Singleton prevents multiple instances of database opening at the
         // same time.
